@@ -1,4 +1,4 @@
-import sys
+import sys 
 sys.path.append('../')
 import time
 from Gui.app_configure import AppConfigWindow

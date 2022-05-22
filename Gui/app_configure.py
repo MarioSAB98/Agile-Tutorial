@@ -1,4 +1,5 @@
 import sys
+import csv
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import QSize
 from moduleConfgFrames import *
@@ -88,15 +89,54 @@ class AppConfigWindow(QMainWindow):
             self.logger.add_warning("price cannot be empty")
             ok=0
         if ok==1:           
-            self.logger.add_success("added"+self.quantitytext.text()+" units of"+self.nametext.text()+" each for price "+self.pricetext.text()+" LE")
+            self.logger.add_success(" added "+self.quantitytext.text()+" units of "+self.nametext.text()+" each for price "+self.pricetext.text()+" LE")
 
 
     def clickme2(self):
-        self.logger.add_text("function 2 check the stock  ")
+        if self.fbox.rowCount() > 1:
+            self.fbox.removeRow(1)
+        skipfirst=1
+        rc=0
+        names=[]
+        quan=[]
+        price=[]
+        try:
+            with open('stock.csv', 'r') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    rc=rc+1
+                    if skipfirst==1:
+                        skipfirst=0
+                    else: 
+                     print(row)
+                     names.append(row[0])
+                     quan.append(row[1])
+                     price.append(row[2])
+            print(rc)
+            self.tableWidget = QTableWidget()
+            print(names)
+            # set row count
+            self.tableWidget.setRowCount(rc)
 
-  
+            # set column count
+            self.tableWidget.setColumnCount(3)
+            self.tableWidget.setItem(0, 0, QTableWidgetItem("Name"))
+            self.tableWidget.setItem(0, 1, QTableWidgetItem("Quantity"))
+            self.tableWidget.setItem(0, 2, QTableWidgetItem("Price"))
+            l=0
+            for i in names:
+                self.tableWidget.setItem(l+1, 0, QTableWidgetItem(names[l]))
+                self.tableWidget.setItem(l+1, 1, QTableWidgetItem(quan[l]))
+                self.tableWidget.setItem(l+1, 2, QTableWidgetItem(price[l]))
+                l=l+1
 
- #layouts for each button 
+            self.tableWidget.verticalHeader().setVisible(False)  # remove table index for each column
+            self.tableWidget.horizontalHeader().setVisible(False)  # remove table index for each row
+            self.fbox.addRow(self.tableWidget)
+            self.logger.add_success("dispalyed the stock ")
+        except:
+            self.logger.add_error("could not display ")
+         #layouts for each button 
     def o1(self):
        self.logger.add_text("fill all the fields then click add ")
        self.namel = QLabel("Item name ")
@@ -119,12 +159,10 @@ class AppConfigWindow(QMainWindow):
 
     def o4(self):
        
-       self.logger.add_text("2 ")
-       self.nm = QLineEdit("")
-       self.button = QPushButton("check", self)
-       self.button.clicked.connect(self.clickme)
+       self.logger.add_text("checking")
+       self.button = QPushButton("stock", self)
+       self.button.clicked.connect(self.clickme2)
        self.fbox = QFormLayout()
-       self.fbox.addRow(self.nm)
        self.fbox.addRow(self.button)
        self.win = QWidget()
        self.win.setLayout(self.fbox)
