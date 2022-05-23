@@ -101,7 +101,10 @@ class AppConfigWindow(QMainWindow):
             ok=0
         if ok==1:           
             self.logger.add_success(" added "+self.quantitytext.text()+" units of "+self.nametext.text()+" each for price "+self.pricetext.text()+" LE")
-
+            fields=[self.quantitytext.text(),self.nametext.text(),self.pricetext.text()]
+            with open('stock.csv','a') as f:
+                 writer = csv.writer(f)
+                 writer.writerow(fields)
 
     def check(self):
         if self.fbox.rowCount() > 1:
