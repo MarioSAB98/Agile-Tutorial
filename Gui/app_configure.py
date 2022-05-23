@@ -76,7 +76,7 @@ class AppConfigWindow(QMainWindow):
 
 
 
-    def clickme(self):
+    def add_item(self):
         ok=1
         if self.nametext.text()=="":
             self.logger.add_warning("item name cannot be empty")
@@ -84,15 +84,26 @@ class AppConfigWindow(QMainWindow):
         if self.quantitytext.text()=="":
             self.logger.add_warning("qunatity cannot be empty")
             ok=0
-            
+        elif self.quantitytext.text().isnumeric()==False:
+            self.logger.add_error("must be a positive integer ")
+            ok=0
+        elif self.quantitytext.text()=='0':
+            self.logger.add_error("cannot be 0 ")
+            ok=0    
         if self.pricetext.text()=="":
             self.logger.add_warning("price cannot be empty")
+            ok=0
+        elif  "-"  in self.pricetext.text(): 
+            self.logger.add_error("must be a positive number ")
+            ok=0
+        elif self.pricetext.text()=='0':
+            self.logger.add_error("cannot be 0 ")
             ok=0
         if ok==1:           
             self.logger.add_success(" added "+self.quantitytext.text()+" units of "+self.nametext.text()+" each for price "+self.pricetext.text()+" LE")
 
 
-    def clickme2(self):
+    def check(self):
         if self.fbox.rowCount() > 1:
             self.fbox.removeRow(1)
         skipfirst=1
@@ -146,7 +157,7 @@ class AppConfigWindow(QMainWindow):
        self.pricel = QLabel("Price/unit")
        self.pricetext = QLineEdit("")
        self.button = QPushButton("add", self)
-       self.button.clicked.connect(self.clickme)
+       self.button.clicked.connect(self.add_item)
        self.fbox = QFormLayout()
        self.fbox.addRow(self.namel,self.nametext)
        self.fbox.addRow(self.quantityl,self.quantitytext)
@@ -161,7 +172,7 @@ class AppConfigWindow(QMainWindow):
        
        self.logger.add_text("checking")
        self.button = QPushButton("stock", self)
-       self.button.clicked.connect(self.clickme2)
+       self.button.clicked.connect(self.check)
        self.fbox = QFormLayout()
        self.fbox.addRow(self.button)
        self.win = QWidget()
