@@ -77,35 +77,37 @@ class AppConfigWindow(QMainWindow):
 
 
     def add_item(self):
-        ok=1
-        if self.nametext.text()=="":
-            self.logger.add_warning("item name cannot be empty")
-            ok=0
-        if self.quantitytext.text()=="":
-            self.logger.add_warning("qunatity cannot be empty")
-            ok=0
-        elif self.quantitytext.text().isnumeric()==False:
-            self.logger.add_error("must be a positive integer ")
-            ok=0
-        elif self.quantitytext.text()=='0':
-            self.logger.add_error("cannot be 0 ")
-            ok=0    
-        if self.pricetext.text()=="":
-            self.logger.add_warning("price cannot be empty")
-            ok=0
-        elif  "-"  in self.pricetext.text(): 
-            self.logger.add_error("must be a positive number ")
-            ok=0
-        elif self.pricetext.text()=='0':
-            self.logger.add_error("cannot be 0 ")
-            ok=0
-        if ok==1:           
-            self.logger.add_success(" added "+self.quantitytext.text()+" units of "+self.nametext.text()+" each for price "+self.pricetext.text()+" LE")
-            fields=[self.quantitytext.text(),self.nametext.text(),self.pricetext.text()]
-            with open('stock.csv','a') as f:
-                 writer = csv.writer(f)
-                 writer.writerow(fields)
-
+        try:
+            ok=1
+            if self.nametext.text()=="":
+                self.logger.add_warning("item name cannot be empty")
+                ok=0
+            if self.quantitytext.text()=="":
+                self.logger.add_warning("qunatity cannot be empty")
+                ok=0
+            elif self.quantitytext.text().isnumeric()==False:
+                self.logger.add_error("must be a positive integer ")
+                ok=0
+            elif self.quantitytext.text()=='0':
+                self.logger.add_error("cannot be 0 ")
+                ok=0    
+            if self.pricetext.text()=="":
+                self.logger.add_warning("price cannot be empty")
+                ok=0
+            elif  "-"  in self.pricetext.text(): 
+                self.logger.add_error("must be a positive number ")
+                ok=0
+            elif self.pricetext.text()=='0':
+                self.logger.add_error("cannot be 0 ")
+                ok=0
+            if ok==1:           
+                self.logger.add_success(" added "+self.quantitytext.text()+" units of "+self.nametext.text()+" each for price "+self.pricetext.text()+" LE")
+                fields=[self.nametext.text(),self.quantitytext.text(),self.pricetext.text()]
+                with open('stock.csv','a', newline='') as f:
+                     writer = csv.writer(f)
+                     writer.writerow(fields)
+        except:
+            self.logger.add_error("could not add item")
     def check(self):
         if self.fbox.rowCount() > 1:
             self.fbox.removeRow(1)
