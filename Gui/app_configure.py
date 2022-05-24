@@ -63,51 +63,49 @@ class AppConfigWindow(QMainWindow):
 
     def showToolBar(self):
 # adding the $ options button 
-        self.addToolBarItem = QAction("o1", self)
+        self.addToolBarItem = QAction("addItem", self)
         self.addToolBarItem.setIcon(QtGui.QIcon('Images/plus.png'))
         self.windowFrame.toolBar.addAction(self.addToolBarItem)
-        self.addToolBarItem.triggered.connect(self.o1)
+        self.addToolBarItem.triggered.connect(self.addItem)
 
 
-        self.generateToolBarItem = QAction(" o4", self)
+        self.generateToolBarItem = QAction(" showStock", self)
         self.generateToolBarItem.setIcon(QtGui.QIcon('Images/generate.png'))
         self.windowFrame.toolBar.addAction(self.generateToolBarItem)
-        self.generateToolBarItem.triggered.connect(self.o4)
+        self.generateToolBarItem.triggered.connect(self.showStock)
 
 
 
     def add_item(self):
-        try:
-            ok=1
-            if self.nametext.text()=="":
-                self.logger.add_warning("item name cannot be empty")
-                ok=0
-            if self.quantitytext.text()=="":
-                self.logger.add_warning("qunatity cannot be empty")
-                ok=0
-            elif self.quantitytext.text().isnumeric()==False:
-                self.logger.add_error("must be a positive integer ")
-                ok=0
-            elif self.quantitytext.text()=='0':
-                self.logger.add_error("cannot be 0 ")
-                ok=0    
-            if self.pricetext.text()=="":
-                self.logger.add_warning("price cannot be empty")
-                ok=0
-            elif  "-"  in self.pricetext.text(): 
-                self.logger.add_error("must be a positive number ")
-                ok=0
-            elif self.pricetext.text()=='0':
-                self.logger.add_error("cannot be 0 ")
-                ok=0
-            if ok==1:           
-                self.logger.add_success(" added "+self.quantitytext.text()+" units of "+self.nametext.text()+" each for price "+self.pricetext.text()+" LE")
-                fields=[self.nametext.text(),self.quantitytext.text(),self.pricetext.text()]
-                with open('stock.csv','a', newline='') as f:
-                     writer = csv.writer(f)
-                     writer.writerow(fields)
-        except:
-            self.logger.add_error("could not add item")
+        ok=1
+        if self.nametext.text()=="":
+            self.logger.add_warning("item name cannot be empty")
+            ok=0
+        if self.quantitytext.text()=="":
+            self.logger.add_warning("qunatity cannot be empty")
+            ok=0
+        elif self.quantitytext.text().isnumeric()==False:
+            self.logger.add_error("must be a positive integer ")
+            ok=0
+        elif self.quantitytext.text()=='0':
+            self.logger.add_error("cannot be 0 ")
+            ok=0    
+        if self.pricetext.text()=="":
+            self.logger.add_warning("price cannot be empty")
+            ok=0
+        elif  self.pricetext.text().isnumeric()==False:
+            self.logger.add_error("must be a positive integer ")
+            ok=0
+        elif self.pricetext.text()=='0':
+            self.logger.add_error("cannot be 0 ")
+            ok=0
+        if ok==1:           
+            self.logger.add_success(" added "+self.quantitytext.text()+" units of "+self.nametext.text()+" each for price "+self.pricetext.text()+" LE")
+            fields=[self.nametext.text(),self.quantitytext.text(),self.pricetext.text()]
+            with open('stock.csv','a', newline='') as f:
+                 writer = csv.writer(f)
+                 writer.writerow(fields)
+
     def check(self):
         if self.fbox.rowCount() > 1:
             self.fbox.removeRow(1)
@@ -153,7 +151,7 @@ class AppConfigWindow(QMainWindow):
         except:
             self.logger.add_error("could not display ")
          #layouts for each button 
-    def o1(self):
+    def addItem(self):
        self.logger.add_text("fill all the fields then click add ")
        self.namel = QLabel("Item name ")
        self.nametext = QLineEdit("")
@@ -173,7 +171,7 @@ class AppConfigWindow(QMainWindow):
        self.setCentralWidget(self.win)
      
 
-    def o4(self):
+    def showStock(self):
        
        self.logger.add_text("checking")
        self.button = QPushButton("stock", self)
@@ -183,8 +181,4 @@ class AppConfigWindow(QMainWindow):
        self.win = QWidget()
        self.win.setLayout(self.fbox)
        self.setCentralWidget(self.win)        
-
-
-   
-
 
